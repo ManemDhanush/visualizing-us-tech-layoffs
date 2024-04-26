@@ -2,13 +2,14 @@ import logo from './logo.svg';
 import './App.css';
 import full_data from './data/data.json';
 import BarChart from './charts/BarChart';
+import DoughnutChart from './charts/DoughnutChart';
 
 function App() {
 
+  
+  var data = full_data.filter(d => d.Year && d.Laid_Off && d.Industry && d.Percentage && d.Money_Raised_in_$_mil && d.Country == "USA" && d.Stage != "Unknown" );
+  
   // console.log(data);
-
-  var data = full_data.filter(d => d.Country == "USA");
-
   const dimension = "Year";
 
   return (
@@ -33,7 +34,7 @@ function App() {
           <BarChart data={data} dimension={dimension} />
         </span>
         <span class= "column2">
-          <BarChart data={data} dimension={dimension} />
+          <DoughnutChart data={data} dimension={dimension} />
         </span>
       </div>
 
