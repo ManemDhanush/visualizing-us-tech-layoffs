@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import full_data from "./data/data.json";
@@ -8,13 +9,59 @@ import PCP from "./charts/PCP";
 import LineChart from "./charts/LineChart";
 import DonutChart from "./charts/DonutChart";
 import ScatterPlot from "./charts/ScatterPlot";
+import ChoroplethMap from "./charts/ChoroplethMap";
+
+
 
 function App() {
+
+  const [industry, setIndustry] = useState(null);
+  const handleIndustryChange = (industry) => {
+    console.log(industry);
+    setIndustry(industry);
+  };
+
+  const [state, setState] = useState(null);
+
   const getQuarter = (month) => {
     return Math.ceil(month / 3);
   };
 
   console.log(full_data);
+
+  const [mapData, setMapData] = useState({
+    state: "US",
+    start: "2020-03-01",
+    end: "2024-04-01",
+    choroplethMap: null,
+    histData: null,
+    parallelData: null,
+    circlePackingData: null,
+    scatterplotDataFunding: null,
+    scatterplotDataCompany: null,
+    scatterplotDataIndustry: null,
+  });
+
+  useEffect(() => {
+    fetch("http://localhost:5000/getMapData",{
+         method: 'POST',
+         body: JSON.stringify(mapData)
+     })
+    .then(response =>response.json())
+    .then(mapData => {
+        setMapData((prevState) => ({
+          ...prevState,
+          choroplethMap: mapData,
+        }));
+    });
+  }, [mapData.state, mapData.start, mapData.end]);
+
+  const handleStateChange = (state) => {
+    console.log(state);
+    setMapData({...mapData, state: state});
+    setState(state);
+  };
+
 
   var data = full_data.filter(
     (d) =>
@@ -66,7 +113,9 @@ function App() {
           >
             STATEWISE LAYOFFS
           </div>
-          <BarChart data={data} dimension={dimension} />
+          {mapData.choroplethMap !== null && (
+            <ChoroplethMap props={mapData} handleStateChange={handleStateChange} />
+          )}
         </div>
         <div
           style={{
@@ -86,7 +135,7 @@ function App() {
           >
             STATEWISE LAYOFFS
           </div>
-          <BarChart data={data} dimension={dimension} />
+          <BarChart data={data} dimension={dimension} state={state} handleIndustryChange={handleIndustryChange}/>
         </div>
         <div
           style={{
@@ -106,7 +155,7 @@ function App() {
           >
             STATEWISE LAYOFFS
           </div>
-          <ScatterPlot data={data} dimensionX={dimension} dimensionY={dimension} />
+          <ScatterPlot data={data} dimensionX="After_layoffs" dimensionY="Laid_Off" xIsCategorical={false} yIsCategorical={false}/>
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -155,7 +204,7 @@ function App() {
             INDUSTRY WIDE LAYOFFS
           </div>
           <div style={{ flex: "1" }}>
-            <DoughnutChart data={dataWithQuarter} dimension={"YearQuarter"} />
+            <DoughnutChart data={dataWithQuarter} dimension={"YearQuarter"} state={state} industry={industry}/>
           </div>
         </div>
         <div

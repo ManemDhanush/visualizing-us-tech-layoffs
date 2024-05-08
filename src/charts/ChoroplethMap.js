@@ -23,13 +23,13 @@ const ChoroplethMap = ( {props, handleStateChange} ) => {
     const handleClick = (event, d) => {
       // console.log(event);
 
-      const statePath = svg.select(`#${event.srcElement.id.replace(/\s+/g, '')}`);
+      const statePath = svg.select(`#${d.properties.name.replace(/\s+/g, '')}`);
       const fillColor = statePath.attr('fill');
-      const newFillColor = fillColor === '#8bc34a' ? colorScale(event.value) : '#8bc34a';
+      const newFillColor = fillColor === '#8bc34a' ? colorScale(d.value) : '#8bc34a';
       statePath.attr('fill', newFillColor);
 
       if (newFillColor === '#8bc34a') {
-        handleStateChange(event.srcElement.id); // call handleStateChange method here
+        handleStateChange(d.properties.name); // call handleStateChange method here
       } else {
         handleStateChange("US");
       }

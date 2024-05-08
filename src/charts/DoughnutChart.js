@@ -1,53 +1,63 @@
 import React, { useEffect, useRef } from "react";
-import { select, arc, pie, scaleOrdinal, rollup } from "d3";
-import { ChartHeight, ChartWidth, Margin } from "../utils/config";
+import { select, arc, pie, scaleOrdinal, schemeSet3 } from "d3";
+import { Margin } from "../utils/config"; // Assuming you have such imports
 
-const DoughnutChart = (props) => {
+const DoughnutChart = ({ data, dimension, state, industry }) => {
   const svgRef = useRef();
 
   useEffect(() => {
-    const { data, dimension } = props;
-
     if (!data || data.length === 0 || !dimension) {
       console.log("Invalid data or dimension provided");
       return;
+    }
+
+    // Filter data by state and industry if not empty
+    let filteredData = data;
+    if (state && industry) {
+      console.log(state, industry);
+      filteredData = data.filter(d => d.state === state && d.Industry === industry);
+    }
+
+    console.log(filteredData);
+
+    // Sort and pick top 5 companies by layoffs, group the rest as "Others"
+    const topCompanies = filteredData.sort((a, b) => b.Laid_Off - a.Laid_Off).slice(0, 5);
+    const otherCompaniesLayoffs = filteredData.slice(5).reduce((acc, curr) => acc + curr.Laid_Off, 0);
+    const displayData = topCompanies.map(d => ({ name: d.company, value: d.Laid_Off }));
+    if (otherCompaniesLayoffs > 0) {
+      displayData.push({ name: "Others", value: otherCompaniesLayoffs });
     }
 
     // Remove any existing SVG elements
     const svg = select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const colors = scaleOrdinal(["#d9e3f0", "#8bc34a"]); // green and white
-    const boxSize = 1000; // Increased graph box size, in pixels
-    const innerRadius = boxSize / 4; // inner radius of pie, adjusted for a thicker doughnut
-    const outerRadius = boxSize / 2; // outer radius of pie, maximized within the box
+    const boxSize = 500;
+    const innerRadius = boxSize / 4;
+    const outerRadius = boxSize / 2;
+
+    // Color scale
+    const colors = scaleOrdinal(schemeSet3);
 
     // Create new svg
     const chart = svg
       .append("svg")
       .attr("preserveAspectRatio", "xMidYMid meet")
-      .attr("height", "100%") // Use percentage for responsive design
-      .attr("width", "100%") // Use percentage for responsive design
+      .attr("height", "100%")
+      .attr("width", "100%")
       .attr("viewBox", `0 0 ${boxSize} ${boxSize}`)
       .append("g")
       .attr("transform", `translate(${boxSize / 2}, ${boxSize / 2})`);
-
-    // Group data by the specified dimension
-    const groupedData = rollup(
-      data,
-      (v) => v.length,
-      (d) => d[dimension]
-    );
 
     const arcGenerator = arc()
       .innerRadius(innerRadius)
       .outerRadius(outerRadius);
 
-    const pieGenerator = pie().value((d) => d[1]);
+    const pieGenerator = pie().value(d => d.value);
 
     const arcs = chart
       .selectAll()
-      .data(pieGenerator(Array.from(groupedData.entries())))
+      .data(pieGenerator(displayData))
       .enter();
 
     arcs
@@ -59,14 +69,14 @@ const DoughnutChart = (props) => {
     arcs
       .append("text")
       .attr("text-anchor", "middle")
-      .text((d) => `${d.data[1]}`)
+      .text(d => `${d.data.name} (${d.data.value})`)
       .style("fill", "#000000")
-      .style("font-size", `${Math.min(boxSize / 10, 30)}px`)
-      .attr("transform", (d) => {
+      .style("font-size", `${Math.min(boxSize / 20, 20)}px`) // Adjusted font size for visibility
+      .attr("transform", d => {
         const [x, y] = arcGenerator.centroid(d);
         return `translate(${x}, ${y})`;
       });
-  }, [props]);
+  }, [data, dimension, state, industry]); // Ensure dependency array is correct
 
   return (
     <div className="DoughnutChart">
