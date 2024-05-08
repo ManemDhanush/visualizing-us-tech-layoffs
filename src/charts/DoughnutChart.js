@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import * as d3 from "d3";
+import { select, arc, pie, scaleOrdinal, rollup } from "d3";
 import { ChartHeight, ChartWidth, Margin } from "../utils/config";
 
 const DoughnutChart = (props) => {
@@ -14,47 +14,46 @@ const DoughnutChart = (props) => {
     }
 
     // Remove any existing SVG elements
-    d3.select(svgRef.current).selectAll("*").remove();
+    const svg = select(svgRef.current);
+    svg.selectAll("*").remove();
 
-    const colors = ["#d9e3f0", "#8bc34a"]; // green and white
-    const boxSize = 500; // Increased graph box size, in pixels
+    const colors = scaleOrdinal(["#d9e3f0", "#8bc34a"]); // green and white
+    const boxSize = 1000; // Increased graph box size, in pixels
     const innerRadius = boxSize / 4; // inner radius of pie, adjusted for a thicker doughnut
     const outerRadius = boxSize / 2; // outer radius of pie, maximized within the box
 
     // Create new svg
-    const svg = d3
-      .select(svgRef.current)
+    const chart = svg
       .append("svg")
       .attr("preserveAspectRatio", "xMidYMid meet")
       .attr("height", "100%") // Use percentage for responsive design
-      .attr("width", "100%")  // Use percentage for responsive design
+      .attr("width", "100%") // Use percentage for responsive design
       .attr("viewBox", `0 0 ${boxSize} ${boxSize}`)
       .append("g")
       .attr("transform", `translate(${boxSize / 2}, ${boxSize / 2})`);
 
     // Group data by the specified dimension
-    const groupedData = d3.rollup(
+    const groupedData = rollup(
       data,
       (v) => v.length,
       (d) => d[dimension]
     );
 
-    const arcGenerator = d3
-      .arc()
+    const arcGenerator = arc()
       .innerRadius(innerRadius)
       .outerRadius(outerRadius);
 
-    const pieGenerator = d3.pie().value((d) => d[1]);
+    const pieGenerator = pie().value((d) => d[1]);
 
-    const arcs = svg
+    const arcs = chart
       .selectAll()
-      .data(pieGenerator(groupedData.entries()))
+      .data(pieGenerator(Array.from(groupedData.entries())))
       .enter();
 
     arcs
       .append("path")
       .attr("d", arcGenerator)
-      .style("fill", (d, i) => colors[i % colors.length]);
+      .style("fill", (d, i) => colors(i));
 
     // Add label inside doughnut chart
     arcs
@@ -62,7 +61,7 @@ const DoughnutChart = (props) => {
       .attr("text-anchor", "middle")
       .text((d) => `${d.data[1]}`)
       .style("fill", "#000000")
-      .style("font-size", "30px")
+      .style("font-size", `${Math.min(boxSize / 10, 30)}px`)
       .attr("transform", (d) => {
         const [x, y] = arcGenerator.centroid(d);
         return `translate(${x}, ${y})`;
@@ -71,7 +70,7 @@ const DoughnutChart = (props) => {
 
   return (
     <div className="DoughnutChart">
-      <svg ref={svgRef}></svg>
+      <svg ref={svgRef} width={500} height={400}></svg>
     </div>
   );
 };

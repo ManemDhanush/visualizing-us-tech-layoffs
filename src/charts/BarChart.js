@@ -17,8 +17,8 @@ const BarChart = (props) => {
     d3.select(svgRef.current).selectAll("*").remove();
 
     // Define the dimensions and margins
-    const width = ChartWidth;
-    const height = ChartHeight;
+    const width = 500;
+    const height = 300;
     const margins = Margin;
 
     // Create the SVG element
@@ -30,13 +30,13 @@ const BarChart = (props) => {
       .style("margin-top", "70px");
 
     // Append title to the chart
-    svg
-      .append("text")
-      .attr("x", width / 2)
-      .attr("y", margins.top / 2)
-      .attr("text-anchor", "middle")
-      .attr("font-size", "20px")
-      .text("Bar Chart for " + dimension);
+    // svg
+    //   .append("text")
+    //   .attr("x", width / 2)
+    //   .attr("y", margins.top / 2)
+    //   .attr("text-anchor", "middle")
+    //   .attr("font-size", "20px")
+    //   .text("Bar Chart for " + dimension);
 
     // Define scales based on the data and dimension type
     const frequencies = d3.rollup(
@@ -115,7 +115,7 @@ const BarChart = (props) => {
       )
       .attr("width", xScale.bandwidth())
       .style("stroke", "#191414")
-      .style("fill", "#1DB954");
+      .style("fill", "#FF5349");
 
     // Add frequency labels on top of bars
     chart
@@ -154,7 +154,7 @@ const BarChart = (props) => {
 
   return (
     <div className="BarChart">
-      <svg ref={svgRef}></svg>
+      <svg ref={svgRef} width={500} height={400}></svg>
     </div>
   );
 };
