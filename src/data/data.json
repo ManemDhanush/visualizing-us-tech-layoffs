@@ -3553,23 +3553,6 @@
       "lng": -118.24368
     },
     {
-      "#": 256,
-      "company": "Impact.com",
-      "state": "California",
-      "location": "Los Angeles",
-      "Laid_Off": 40,
-      "Date_layoffs": "2024-02-05",
-      "Percentage": 3,
-      "Before_layoffs": 1333,
-      "After_layoffs": 1293,
-      "Industry": "Sales",
-      "Stage": "Private …",
-      "Money_Raised_in_$_mil": "$361",
-      "Year": 2024,
-      "lat": 34.05223,
-      "lng": -118.24368
-    },
-    {
       "#": 258,
       "company": "Riot Games",
       "state": "California",
@@ -8670,23 +8653,6 @@
       "lng": -122.41942
     },
     {
-      "#": 625,
-      "company": "Waymo",
-      "state": "California",
-      "location": "San Francisco Bay Area",
-      "Laid_Off": 209,
-      "Date_layoffs": "2023-03-01",
-      "Percentage": 8,
-      "Before_layoffs": 2613,
-      "After_layoffs": 2404,
-      "Industry": "Transportation",
-      "Stage": "Subsidi…",
-      "Money_Raised_in_$_mil": "$5.500",
-      "Year": 2023,
-      "lat": 37.38605,
-      "lng": -122.08385
-    },
-    {
       "#": 626,
       "company": "Sonder",
       "state": "California",
@@ -9246,23 +9212,6 @@
       "Year": 2023,
       "lat": 37.77493,
       "lng": -122.41942
-    },
-    {
-      "#": 659,
-      "company": "Uber Freight",
-      "state": "California",
-      "location": "San Francisco Bay Area",
-      "Laid_Off": 150,
-      "Date_layoffs": "2023-01-23",
-      "Percentage": 3,
-      "Before_layoffs": 5000,
-      "After_layoffs": 4850,
-      "Industry": "Logistics",
-      "Stage": "Subsidi…",
-      "Money_Raised_in_$_mil": "$2700",
-      "Year": 2023,
-      "lat": 37.77493,
-      "lng": -122.36608
     },
     {
       "#": 660,

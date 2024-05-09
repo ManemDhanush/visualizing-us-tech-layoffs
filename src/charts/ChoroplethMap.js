@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const ChoroplethMap = ( {props, handleStateChange} ) => {
+const ChoroplethMap = ( {props, state, handleStateChange} ) => {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -21,20 +21,16 @@ const ChoroplethMap = ( {props, handleStateChange} ) => {
     const path = d3.geoPath().projection(projection);
 
     const handleClick = (event, d) => {
-      // console.log(event);
-
       const statePath = svg.select(`#${d.properties.name.replace(/\s+/g, '')}`);
       const fillColor = statePath.attr('fill');
       const newFillColor = fillColor === '#8bc34a' ? colorScale(d.value) : '#8bc34a';
       statePath.attr('fill', newFillColor);
-      handleStateChange(d.properties.name);
-
-      // if (newFillColor === '#8bc34a') {
-      //   handleStateChange(d.properties.name); // call handleStateChange method here
-      // } else {
-      //   handleStateChange("US");
-      // }
+    
+      handleStateChange(prevState => {
+        return prevState === d.properties.name ? "" : d.properties.name;
+      });
     };
+    
 
     svg
       .selectAll('path')
@@ -46,7 +42,7 @@ const ChoroplethMap = ( {props, handleStateChange} ) => {
       .on('click', handleClick)
       .append('title')
       .text(d => d.properties.name + " " + d.value);
-  }, [props.start, props.end]);
+  }, []);
 
   return (
     <svg ref={ref} width={700} height={350}>

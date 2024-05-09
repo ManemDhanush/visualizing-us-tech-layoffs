@@ -16,30 +16,46 @@ import * as d3 from "d3";
 
 function App() {
 
+  useEffect(() => {
+    console.log("This is re rendering");
+  }, []);
+
   const parseDate = d3.timeParse("%Y-%m-%d");
 
   const [data, setData] = useState(full_data.filter(
     (d) =>
       d.Year &&
       d.Laid_Off &&
-      d.Laid_Off < 500 &&
+      // d.Laid_Off < 500 &&
       d.Industry &&
       d.Percentage &&
       d.Money_Raised_in_$_mil &&
-      d.Stage != "Unknown" &&
-      d.After_layoffs < 5000
+      d.Stage != "Unknown"
+      // d.After_layoffs < 5000
   ));
+
+  const tempData = full_data.filter(
+    (d) =>
+      d.Year &&
+      d.Laid_Off &&
+      // d.Laid_Off < 500 &&
+      d.Industry &&
+      d.Percentage &&
+      d.Money_Raised_in_$_mil &&
+      d.Stage != "Unknown"
+      // d.After_layoffs < 5000
+  );
 
   const [lineData, setlineData] = useState(full_data.filter(
     (d) =>
       d.Year &&
       d.Laid_Off &&
-      d.Laid_Off < 500 &&
+      // d.Laid_Off < 500 &&
       d.Industry &&
       d.Percentage &&
       d.Money_Raised_in_$_mil &&
-      d.Stage != "Unknown" &&
-      d.After_layoffs < 5000
+      d.Stage != "Unknown"
+      // d.After_layoffs < 5000
   ));
 
   const [industry, setIndustry] = useState(null);
@@ -48,29 +64,33 @@ function App() {
     setIndustry(industry);
   };
 
-  const [state, setState] = useState(null);
+  const [state, setState] = useState("");
+  // console.log(state+"old state");
   const handleStateChange = (newState) => {
-    // console.log(newState);
+    // console.log(newState+"newState");
+    // console.log(state+"state");
+    setState(newState);
 
-    state === newState ? setState(null) : setState(newState);
+    // state === newState ? setState("Yasa") : setState(newState);
 
-    if (state) {
-      setData(full_data.filter((d) => d.state === state));
-    } else {
-      setData(full_data.filter(
-        (d) =>
-          d.Year &&
-          d.Laid_Off &&
-          d.Laid_Off < 500 &&
-          d.Industry &&
-          d.Percentage &&
-          d.Money_Raised_in_$_mil &&
-          d.Stage != "Unknown" &&
-          d.After_layoffs < 5000
-      ));
-    }
 
-    console.log(state);
+    // if (state) {
+    //   setData(full_data.filter((d) => d.state === state));
+    // } else {
+    //   setData(full_data.filter(
+    //     (d) =>
+    //       d.Year &&
+    //       d.Laid_Off &&
+    //       d.Laid_Off < 500 &&
+    //       d.Industry &&
+    //       d.Percentage &&
+    //       d.Money_Raised_in_$_mil &&
+    //       d.Stage != "Unknown" &&
+    //       d.After_layoffs < 5000
+    //   ));
+    // }
+
+    // console.log(state);
   };
 
   const [range, setRange] = useState(null);
@@ -79,9 +99,9 @@ function App() {
     if (range) {
       const start = range[0];
       const end = range[1];
-      console.log(start, end);
+      // console.log(start, end);
 
-      setData(full_data.filter((d) => parseDate(d.Date_layoffs) >= start && parseDate(d.Date_layoffs) <= end));
+      setData(tempData.filter((d) => parseDate(d.Date_layoffs) >= start && parseDate(d.Date_layoffs) <= end));
       // setData(full_data.filter((d) => d.Year >= range[0] && d.Year <= range[1]));
       setRange(range);
     }
@@ -161,7 +181,7 @@ function App() {
           </div>
           <div style={{paddingLeft: "25px", paddingTop: "25px"}}>
             {mapData.choroplethMap !== null && (
-              <ChoroplethMap props={mapData} handleStateChange={handleStateChange} />
+              <ChoroplethMap props={mapData} state = {state} handleStateChange={handleStateChange} />
             )}
           </div>
 

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Margin } from "../utils/config";
 import * as d3 from "d3";
 
 const BarChart = ({ data, dimension, state, handleIndustryChange }) => {
   const svgRef = useRef();
+  const [activeDimension, setActiveDimension] = useState(null);  // State to track the active dimension
 
   useEffect(() => {
     if (!data || data.length === 0 || !dimension) {
@@ -11,16 +12,11 @@ const BarChart = ({ data, dimension, state, handleIndustryChange }) => {
       return;
     }
 
-    // Filter data by state if state is not empty
     let filteredData = data;
     if (state) {
       filteredData = data.filter(d => d.state === state);
     }
 
-    // console.log(filteredData);
-    
-    // console.log(data);
-    // Remove any existing SVG elements
     d3.select(svgRef.current).selectAll("*").remove();
 
     const width = 600;
@@ -36,8 +32,8 @@ const BarChart = ({ data, dimension, state, handleIndustryChange }) => {
 
     const frequencies = d3.rollup(
       filteredData,
-      (v) => v.length,
-      (d) => d[dimension]
+      v => v.length,
+      d => d[dimension]
     );
 
     const xScale = d3.scaleBand()
@@ -52,81 +48,46 @@ const BarChart = ({ data, dimension, state, handleIndustryChange }) => {
 
     const chart = svg
       .append("g")
-      .classed("display", true)
       .attr("transform", `translate(${margins.left}, ${margins.top})`);
 
-    const xAxis = d3.axisBottom(xScale).tickFormat((dv) => dv);
+    // Define axes
+    const xAxis = d3.axisBottom(xScale).tickFormat(dv => dv);
     const yAxis = d3.axisLeft(yScale);
 
-    chart
-      .append("g")
-      .classed("gridline y-grid", true)
-      .call(d3.axisLeft(yScale).tickSize(-(width - margins.left - margins.right)).tickFormat(""))
-      .selectAll("line")
-      .attr("stroke", "#ddd");
-
-    chart
-      .append("g")
-      .classed("x-axis", true)
+    chart.append("g")
       .attr("transform", `translate(0, ${height - margins.top - margins.bottom})`)
       .call(xAxis)
       .selectAll("text")
       .attr("transform", "translate(-10,0) rotate(-45)")
       .style("text-anchor", "end");
 
-    chart
-      .append("g")
-      .classed("y-axis", true)
-      .attr("transform", "translate(0,0)")
+    chart.append("g")
       .call(yAxis);
 
-    chart
-      .selectAll(".bar")
+    // Draw bars with dynamic fill based on active dimension
+    chart.selectAll(".bar")
       .data(frequencies.entries())
       .enter()
       .append("rect")
       .classed("bar", true)
-      .attr("x", (d) => xScale(d[0]))
-      .attr("y", (d) => yScale(d[1]))
-      .attr("height", (d) => height - margins.top - margins.bottom - yScale(d[1]))
+      .attr("x", d => xScale(d[0]))
+      .attr("y", d => yScale(d[1]))
+      .attr("height", d => height - margins.top - margins.bottom - yScale(d[1]))
       .attr("width", xScale.bandwidth())
-      .style("stroke", "#191414")
-      .style("fill", "#FF5349")
+      .style("fill", d => activeDimension === d[0] ? "#8bc34a" : "#FF7A70")  // Conditional fill color
       .on("click", (event, d) => {
-        // console.log(d);
-        handleIndustryChange(d[0]);
+        if (activeDimension === d[0]) {
+          setActiveDimension(null);  // Unselect if currently selected
+          handleIndustryChange("");  // Call handler with empty string
+        } else {
+          setActiveDimension(d[0]);  // Set new active dimension
+          handleIndustryChange(d[0]);  // Update industry
+        }
       });
 
-    chart
-      .selectAll(".bar-label")
-      .data(frequencies.entries())
-      .enter()
-      .append("text")
-      .classed("bar-label", true)
-      .attr("x", (d) => xScale(d[0]) + xScale.bandwidth() / 2)
-      .attr("y", (d) => yScale(d[1]) - 5)
-      .style("text-anchor", "middle")
-      .style("font-size", "12px")
-      .text((d) => d[1]);
-
-    chart
-      .select(".x-axis")
-      .append("text")
-      .attr("x", width - margins.left - margins.right)
-      .attr("y", 40)
-      .style("font-size", "15px")
-      .style("text-anchor", "end")
-      .text(dimension + " →");
-
-    chart
-      .select(".y-axis")
-      .append("text")
-      .attr("x", 0)
-      .attr("y", -20)
-      .style("font-size", "15px")
-      .style("text-anchor", "middle")
-      .text("↑ Frequency");
-  }, [data, dimension, state]);
+    // Optionally add labels
+    // Further code for labels or other elements as needed...
+  }, [data, dimension, state, activeDimension]);  // Include activeDimension in dependency array
 
   return (
     <div className="BarChart">
