@@ -13,12 +13,16 @@ const DoughnutChart = ({ data, dimension, state, industry }) => {
 
     // Filter data by state and industry if not empty
     let filteredData = data;
-    if (state && industry) {
-      console.log(state, industry);
-      filteredData = data.filter(d => d.state === state && d.Industry === industry);
+    if (state) {
+      // console.log(state, industry);
+      filteredData = data.filter(d => d.state === state);
     }
 
-    console.log(filteredData);
+    if (industry) {
+      filteredData = filteredData.filter(d => d.Industry === industry);
+    }
+
+    // console.log(filteredData);
 
     // Sort and pick top 5 companies by layoffs, group the rest as "Others"
     const topCompanies = filteredData.sort((a, b) => b.Laid_Off - a.Laid_Off).slice(0, 5);

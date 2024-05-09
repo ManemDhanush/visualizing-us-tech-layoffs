@@ -4,7 +4,7 @@ import "parcoord-es/dist/parcoords.css";
 import * as d3 from 'd3';
 
 const PCP = ({ props }) => {
-    console.log(props);
+    // console.log(props);
     const chartRef = useRef(null);
     const colors = ["#4c78a8","#f58518","#54a24b","#e45756"];
     useEffect(() => {
@@ -46,7 +46,7 @@ const PCP = ({ props }) => {
         <div
             ref={chartRef}
             id={"chart-id"}
-            style={{ width: 700, height: 400 }}
+            style={{ width: 1000, height: 400 }}
             className={"parcoords"}
         >
         </div>

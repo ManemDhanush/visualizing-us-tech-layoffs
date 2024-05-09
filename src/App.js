@@ -8,7 +8,7 @@ import ParallelCoordinatePlotAllColumns from "./charts/ParallelCoordinatePlotAll
 import PCP from "./charts/PCP";
 import LineChart from "./charts/LineChart";
 // import DonutChart from "./charts/DonutChart";
-import ScatterPlot from "./charts/ScatterPlot";
+// import ScatterPlot from "./charts/ScatterPlot";
 import ChoroplethMap from "./charts/ChoroplethMap";
 
 
@@ -17,11 +17,19 @@ function App() {
 
   const [industry, setIndustry] = useState(null);
   const handleIndustryChange = (industry) => {
-    console.log(industry);
+    // console.log(industry);
     setIndustry(industry);
   };
 
   const [state, setState] = useState(null);
+
+  const handleStateChange = (newState) => {
+    // console.log(newState);
+
+    state === newState ? setState(null) : setState(newState);
+
+    console.log(state);
+  };
 
   const getQuarter = (month) => {
     return Math.ceil(month / 3);
@@ -56,12 +64,6 @@ function App() {
     });
   }, [mapData.state, mapData.start, mapData.end]);
 
-  const handleStateChange = (state) => {
-    console.log(state);
-    setMapData({...mapData, state: state});
-    setState(state);
-  };
-
 
   var data = full_data.filter(
     (d) =>
@@ -82,7 +84,7 @@ function App() {
     )}`, // Adding 1 because months are zero-based
   }));
 
-  console.log(data);
+  // console.log(data);
   const dimension = "Industry";
 
   return (
@@ -158,7 +160,7 @@ function App() {
           >
             STATEWISE LAYOFFS
           </div>
-          <ScatterPlot data={data} dimensionX="After_layoffs" dimensionY="Laid_Off" xIsCategorical={false} yIsCategorical={false}/>
+          <DoughnutChart data={dataWithQuarter} dimension={"YearQuarter"} state={state} industry={industry}/>
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -184,7 +186,7 @@ function App() {
             <PCP props={{ parallelData: data }} />
           </div>
         </div>
-        <div
+        {/* <div
           style={{
             flex: "1",
             boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
@@ -209,7 +211,7 @@ function App() {
           <div style={{ flex: "1" }}>
             <DoughnutChart data={dataWithQuarter} dimension={"YearQuarter"} state={state} industry={industry}/>
           </div>
-        </div>
+        </div> */}
         <div
           style={{
             flex: "1",
@@ -237,68 +239,7 @@ function App() {
           </div>
         </div>
       </div>
-      {/* <div>
-        <div
-          style={{
-            flex: "1",
-            boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-            padding: "10px",
-            marginBottom: "10px",
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: "15px",
-              fontWeight: "bold",
-              marginBottom: "0px",
-            }}
-          >
-            TIME SERIES CHART
-          </div>
-          <div style={{ flex: "1" }}>
-            <LineChart data={dataWithQuarter} />
-          </div>
-        </div>
-      </div> */}
     </>
-  );
-
-  return (
-    <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
-
-      <div class="row1">
-        <span class="column1">
-          <BarChart data={data} dimension={dimension} />
-        </span>
-        <span class="column2">
-          <BarChart data={data} dimension="Year" />
-        </span>
-        {/* <span class= "column2">
-          <DoughnutChart data={data} dimension={dimension} />
-        </span>
-        <span>
-          <ParallelCoordinatePlotAllColumns data={data} />
-        </span> */}
-      </div>
-    </div>
   );
 }
 

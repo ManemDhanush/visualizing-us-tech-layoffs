@@ -10,8 +10,8 @@ const LineChart = ({ data }) => {
       return;
     }
 
-    const margin = { top: 10, right: 30, bottom: 60, left: 60 };  // Increase bottom margin for rotated labels
-    const width = 500;
+    const margin = { top: 10, right: 30, bottom: 60, left: 60 };
+    const width = 700;
     const height = 400 - margin.top - margin.bottom;
 
     const svg = d3.select(svgRef.current)
@@ -20,16 +20,23 @@ const LineChart = ({ data }) => {
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
+    // Adjust date parsing and formatting
     const parseDate = d3.timeParse("%Y-%m-%d");
     const formatDate = d3.timeFormat("%Y-%m");
-    data.forEach(d => {
-      d.Date_layoffs = formatDate(parseDate(d.Date_layoffs));
-    });
+    const transformedData = data.map(d => {
+      const parsedDate = parseDate(d.Date_layoffs);
+      return {
+        ...d,
+        Date_layoffs: parsedDate ? formatDate(parsedDate) : "Invalid date"
+      };
+    }).filter(d => d.Date_layoffs !== "Invalid date");
 
-    const dataByMonth = Array.from(d3.group(data, d => d.Date_layoffs),
+    console.log(transformedData);
+
+    const dataByMonth = Array.from(d3.group(transformedData, d => d.Date_layoffs),
       ([month, values]) => ({
         month: d3.timeParse("%Y-%m")(month),
-        Laid_Off: d3.sum(values, d => d.Laid_Off)
+        Laid_Off: d3.sum(values, v => v.Laid_Off)
       })
     ).sort((a, b) => a.month - b.month);
 
@@ -47,21 +54,18 @@ const LineChart = ({ data }) => {
 
     const yAxis = d3.axisLeft(y).ticks(10);
 
-    // Append the x-axis and rotate labels
     svg.append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(xAxis)
       .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-45)");
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", ".15em")
+      .attr("transform", "rotate(-45)");
 
-    // Append the y-axis
     svg.append("g")
       .call(yAxis);
 
-    // Append the line
     svg.append("path")
       .datum(dataByMonth)
       .attr("fill", "none")
@@ -76,7 +80,7 @@ const LineChart = ({ data }) => {
 
   return (
     <div className="LineChart">
-      <svg ref={svgRef} width={500} height={400}></svg>
+      <svg ref={svgRef} width={1000} height={400}></svg>
     </div>
   );
 };

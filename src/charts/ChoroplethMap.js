@@ -27,12 +27,13 @@ const ChoroplethMap = ( {props, handleStateChange} ) => {
       const fillColor = statePath.attr('fill');
       const newFillColor = fillColor === '#8bc34a' ? colorScale(d.value) : '#8bc34a';
       statePath.attr('fill', newFillColor);
+      handleStateChange(d.properties.name);
 
-      if (newFillColor === '#8bc34a') {
-        handleStateChange(d.properties.name); // call handleStateChange method here
-      } else {
-        handleStateChange("US");
-      }
+      // if (newFillColor === '#8bc34a') {
+      //   handleStateChange(d.properties.name); // call handleStateChange method here
+      // } else {
+      //   handleStateChange("US");
+      // }
     };
 
     svg
