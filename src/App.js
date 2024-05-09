@@ -7,7 +7,7 @@ import DoughnutChart from "./charts/DoughnutChart";
 import ParallelCoordinatePlotAllColumns from "./charts/ParallelCoordinatePlotAllColumns";
 import PCP from "./charts/PCP";
 import LineChart from "./charts/LineChart";
-import DonutChart from "./charts/DonutChart";
+// import DonutChart from "./charts/DonutChart";
 import ScatterPlot from "./charts/ScatterPlot";
 import ChoroplethMap from "./charts/ChoroplethMap";
 
@@ -92,14 +92,14 @@ function App() {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          marginTop: "0.4%",
+          marginTop: "1%",
         }}
       >
         <div
           style={{
             flex: "1",
             boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-            padding: "10px",
+            padding: "20px",
             marginBottom: "10px",
           }}
         >
@@ -113,9 +113,12 @@ function App() {
           >
             STATEWISE LAYOFFS
           </div>
-          {mapData.choroplethMap !== null && (
-            <ChoroplethMap props={mapData} handleStateChange={handleStateChange} />
-          )}
+          <div style={{paddingLeft: "80px", paddingTop: "50px"}}>
+            {mapData.choroplethMap !== null && (
+              <ChoroplethMap props={mapData} handleStateChange={handleStateChange} />
+            )}
+          </div>
+
         </div>
         <div
           style={{

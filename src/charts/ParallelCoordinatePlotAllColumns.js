@@ -10,7 +10,7 @@ const ParallelCoordinatePlotAllColumns = ({ data }) => {
     // Calculate dimensions excluding 'Name' and any in mdsDeleteColumns
     const allDimensions = Object.keys(data[0]);
     const initialDimensions = allDimensions.filter(
-      (d) => d !== "Name" && d != "Money_Raised_in_$_mil" && d != "#" && d != "Company" && d != "Country" && d != "Continent" && d != "Date_layoffs" && d != "lat" && d != "lng"
+      (d) => d !== "Name" && d !== "Money_Raised_in_$_mil" && d !== "#" && d !== "Company" && d !== "Country" && d !== "Continent" && d !== "Date_layoffs" && d !== "lat" && d !== "lng"
     );
     setDimensions(initialDimensions);
   }, [data]);
