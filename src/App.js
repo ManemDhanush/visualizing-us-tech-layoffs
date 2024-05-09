@@ -111,15 +111,7 @@ function App() {
 
   const [mapData, setMapData] = useState({
     state: "US",
-    start: "2020-03-01",
-    end: "2024-04-01",
     choroplethMap: null,
-    histData: null,
-    parallelData: null,
-    circlePackingData: null,
-    scatterplotDataFunding: null,
-    scatterplotDataCompany: null,
-    scatterplotDataIndustry: null,
   });
 
   useEffect(() => {
