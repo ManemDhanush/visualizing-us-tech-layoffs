@@ -202,7 +202,7 @@ function App() {
               marginBottom: "10px",
             }}
           >
-            STATEWISE LAYOFFS
+            COMPANY-WISE LAYOFFS
           </div>
           <DoughnutChart data={data} state={state} industry={industry}/>
         </div>
