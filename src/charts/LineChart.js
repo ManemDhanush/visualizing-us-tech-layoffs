@@ -72,6 +72,22 @@ const LineChart = ({ data, handleRangeChange }) => {
         .y(d => y(d.Laid_Off))
       );
 
+    g.append("text")
+      .attr("x", 100)
+      .attr("y", 0)
+      .attr("fill", "currentColor")
+      .style("font-size", "11px")
+      .style("text-anchor", "end")
+      .text("Number of Layoffs ↑");
+
+    g.append("text")
+      .attr("x", height + height + 50)
+      .attr("y", height + 30)
+      .attr("fill", "currentColor")
+      .style("font-size", "11px")
+      .style("text-anchor", "end")
+      .text("Date ->");
+
     // Setup the brush
     const brush = d3.brushX()
       .extent([[0, 0], [width, height]])

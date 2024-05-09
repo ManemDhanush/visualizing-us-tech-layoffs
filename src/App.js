@@ -92,7 +92,8 @@ function App() {
               fontWeight: "bold",
               marginBottom: "10px",
             }}>
-        <h1>Tech Layoffs Visualization</h1>
+        <h1>US Tech Layoffs Visualization</h1>
+        {/* <h4>By: Dhanush Manem, Nitin Gopala Krishna Sonteneni</h4> */}
       </div>
       <div
         style={{

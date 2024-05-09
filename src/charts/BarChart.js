@@ -85,6 +85,20 @@ const BarChart = ({ data, dimension, state, handleIndustryChange }) => {
         }
       });
 
+    chart.append("text")
+      .attr("x", width / 2 + 250)
+      .attr("y", height)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "11px")
+      .text("Industry ->");
+
+    chart.append("text")
+      .attr("x", 30)
+      .attr("y", 0)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "11px")
+      .text("Companies ↑");
+
     // Optionally add labels
     // Further code for labels or other elements as needed...
   }, [data, dimension, state, activeDimension]);  // Include activeDimension in dependency array

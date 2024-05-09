@@ -27,7 +27,7 @@ const initializeChart = (node, data, colors) => {
 
 const PCP = ({ data }) => {
     const chartRef = useRef(null);
-    const colors = ['#90baed', '#ffd3b4', '#9be3a3', '#f8a3a4', '#dac9e9'];
+    const colors = ['#90baed', '#DEC256', '#9be3a3', '#f8a3a4', '#dac9e9'];
 
     useEffect(() => {
         const processedData = processData(data);
