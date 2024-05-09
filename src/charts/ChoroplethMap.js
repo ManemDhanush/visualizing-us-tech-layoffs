@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from 'react';
+import us_states from "../data/us-states-default.json";
 import * as d3 from 'd3';
 
 const ChoroplethMap = ( {props, state, handleStateChange} ) => {
   const ref = useRef(null);
 
   useEffect(() => {
-    const usStates = props.choroplethMap;
+    const usStates = us_states;
     // console.log(usStates);
     const svg = d3.select(ref.current);
     const width = +svg.attr('width');
@@ -45,7 +46,7 @@ const ChoroplethMap = ( {props, state, handleStateChange} ) => {
   }, []);
 
   return (
-    <svg ref={ref} width={700} height={350}>
+    <svg ref={ref} width={600} height={350}>
     </svg>
   );
 };

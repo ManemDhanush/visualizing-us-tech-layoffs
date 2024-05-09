@@ -19,7 +19,7 @@ const BarChart = ({ data, dimension, state, handleIndustryChange }) => {
 
     d3.select(svgRef.current).selectAll("*").remove();
 
-    const width = 600;
+    const width = 700;
     const height = 370;
     const margins = Margin;
 
@@ -91,7 +91,7 @@ const BarChart = ({ data, dimension, state, handleIndustryChange }) => {
 
   return (
     <div className="BarChart">
-      <svg ref={svgRef} width={500} height={400}></svg>
+      <svg ref={svgRef} width={700} height={400}></svg>
     </div>
   );
 };
