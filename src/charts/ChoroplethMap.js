@@ -49,7 +49,7 @@ const ChoroplethMap = ( {props, handleStateChange} ) => {
   }, [props.start, props.end]);
 
   return (
-    <svg ref={ref} width={500} height={280}>
+    <svg ref={ref} width={700} height={350}>
     </svg>
   );
 };

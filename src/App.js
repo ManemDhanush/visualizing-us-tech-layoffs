@@ -90,6 +90,15 @@ function App() {
   return (
     <>
       {/* <NavBar /> */}
+      <div 
+        style={{
+              textAlign: "center",
+              fontSize: "15px",
+              fontWeight: "bold",
+              marginBottom: "10px",
+            }}>
+        <h1>Tech Layoffs Visualization</h1>
+      </div>
       <div
         style={{
           display: "flex",
@@ -113,9 +122,9 @@ function App() {
               marginBottom: "10px",
             }}
           >
-            STATEWISE LAYOFFS
+            STATE-WISE LAYOFFS
           </div>
-          <div style={{paddingLeft: "80px", paddingTop: "50px"}}>
+          <div style={{paddingLeft: "25px", paddingTop: "25px"}}>
             {mapData.choroplethMap !== null && (
               <ChoroplethMap props={mapData} handleStateChange={handleStateChange} />
             )}
@@ -138,7 +147,7 @@ function App() {
               marginBottom: "10px",
             }}
           >
-            STATEWISE LAYOFFS
+            INDUSTRY-WISE LAYOFFS
           </div>
           <BarChart data={data} dimension={dimension} state={state} handleIndustryChange={handleIndustryChange}/>
         </div>
