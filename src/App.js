@@ -10,10 +10,37 @@ import LineChart from "./charts/LineChart";
 // import DonutChart from "./charts/DonutChart";
 // import ScatterPlot from "./charts/ScatterPlot";
 import ChoroplethMap from "./charts/ChoroplethMap";
+import * as d3 from "d3";
 
 
 
 function App() {
+
+  const parseDate = d3.timeParse("%Y-%m-%d");
+
+  const [data, setData] = useState(full_data.filter(
+    (d) =>
+      d.Year &&
+      d.Laid_Off &&
+      d.Laid_Off < 500 &&
+      d.Industry &&
+      d.Percentage &&
+      d.Money_Raised_in_$_mil &&
+      d.Stage != "Unknown" &&
+      d.After_layoffs < 5000
+  ));
+
+  const [lineData, setlineData] = useState(full_data.filter(
+    (d) =>
+      d.Year &&
+      d.Laid_Off &&
+      d.Laid_Off < 500 &&
+      d.Industry &&
+      d.Percentage &&
+      d.Money_Raised_in_$_mil &&
+      d.Stage != "Unknown" &&
+      d.After_layoffs < 5000
+  ));
 
   const [industry, setIndustry] = useState(null);
   const handleIndustryChange = (industry) => {
@@ -22,17 +49,42 @@ function App() {
   };
 
   const [state, setState] = useState(null);
-
   const handleStateChange = (newState) => {
     // console.log(newState);
 
     state === newState ? setState(null) : setState(newState);
 
+    if (state) {
+      setData(full_data.filter((d) => d.state === state));
+    } else {
+      setData(full_data.filter(
+        (d) =>
+          d.Year &&
+          d.Laid_Off &&
+          d.Laid_Off < 500 &&
+          d.Industry &&
+          d.Percentage &&
+          d.Money_Raised_in_$_mil &&
+          d.Stage != "Unknown" &&
+          d.After_layoffs < 5000
+      ));
+    }
+
     console.log(state);
   };
 
-  const getQuarter = (month) => {
-    return Math.ceil(month / 3);
+  const [range, setRange] = useState(null);
+  const handleRangeChange = (range) => {
+    // console.log(range);
+    if (range) {
+      const start = range[0];
+      const end = range[1];
+      console.log(start, end);
+
+      setData(full_data.filter((d) => parseDate(d.Date_layoffs) >= start && parseDate(d.Date_layoffs) <= end));
+      // setData(full_data.filter((d) => d.Year >= range[0] && d.Year <= range[1]));
+      setRange(range);
+    }
   };
 
   console.log(full_data);
@@ -65,24 +117,7 @@ function App() {
   }, [mapData.state, mapData.start, mapData.end]);
 
 
-  var data = full_data.filter(
-    (d) =>
-      d.Year &&
-      d.Laid_Off &&
-      d.Laid_Off < 500 &&
-      d.Industry &&
-      d.Percentage &&
-      d.Money_Raised_in_$_mil &&
-      d.Stage != "Unknown" &&
-      d.After_layoffs < 5000
-  );
-
-  const dataWithQuarter = data.map((item) => ({
-    ...item,
-    YearQuarter: `${item.Year}-Q${getQuarter(
-      new Date(item.Date_layoffs).getMonth() + 1
-    )}`, // Adding 1 because months are zero-based
-  }));
+  
 
   // console.log(data);
   const dimension = "Industry";
@@ -169,7 +204,7 @@ function App() {
           >
             STATEWISE LAYOFFS
           </div>
-          <DoughnutChart data={dataWithQuarter} dimension={"YearQuarter"} state={state} industry={industry}/>
+          <DoughnutChart data={data} state={state} industry={industry}/>
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -192,7 +227,7 @@ function App() {
             PARALLEL COORDINATES PLOT
           </div>
           <div style={{ marginLeft: "1%", flex: "1" }}>
-            <PCP props={{ parallelData: data }} />
+            <PCP data={data} />
           </div>
         </div>
         {/* <div
@@ -244,7 +279,7 @@ function App() {
             TIME SERIES CHART
           </div>
           <div style={{ flex: "1" }}>
-            <LineChart data={data} />
+            <LineChart data={lineData} handleRangeChange={handleRangeChange} />
           </div>
         </div>
       </div>

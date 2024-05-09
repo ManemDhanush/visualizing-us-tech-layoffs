@@ -2,11 +2,11 @@ import React, { useEffect, useRef } from "react";
 import { select, arc, pie, scaleOrdinal, schemeSet3 } from "d3";
 import { Margin } from "../utils/config"; // Assuming you have such imports
 
-const DoughnutChart = ({ data, dimension, state, industry }) => {
+const DoughnutChart = ({ data, state, industry }) => {
   const svgRef = useRef();
 
   useEffect(() => {
-    if (!data || data.length === 0 || !dimension) {
+    if (!data || data.length === 0 ) {
       console.log("Invalid data or dimension provided");
       return;
     }
@@ -80,7 +80,7 @@ const DoughnutChart = ({ data, dimension, state, industry }) => {
         const [x, y] = arcGenerator.centroid(d);
         return `translate(${x}, ${y})`;
       });
-  }, [data, dimension, state, industry]); // Ensure dependency array is correct
+  }, [data, state, industry]); // Ensure dependency array is correct
 
   return (
     <div className="DoughnutChart">

@@ -17,9 +17,9 @@ const BarChart = ({ data, dimension, state, handleIndustryChange }) => {
       filteredData = data.filter(d => d.state === state);
     }
 
-    console.log(filteredData);
+    // console.log(filteredData);
     
-    console.log(data);
+    // console.log(data);
     // Remove any existing SVG elements
     d3.select(svgRef.current).selectAll("*").remove();
 
@@ -93,7 +93,7 @@ const BarChart = ({ data, dimension, state, handleIndustryChange }) => {
       .style("stroke", "#191414")
       .style("fill", "#FF5349")
       .on("click", (event, d) => {
-        console.log(d);
+        // console.log(d);
         handleIndustryChange(d[0]);
       });
 

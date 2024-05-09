@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
-const LineChart = ({ data }) => {
+const LineChart = ({ data, handleRangeChange }) => {
   const svgRef = useRef();
+  const [selectedRange, setSelectedRange] = useState(null); // State to store the selected range
 
   useEffect(() => {
     if (!data || data.length === 0) {
@@ -14,13 +15,15 @@ const LineChart = ({ data }) => {
     const width = 700;
     const height = 400 - margin.top - margin.bottom;
 
-    const svg = d3.select(svgRef.current)
+    const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove(); // Clear previous SVG content
+
+    const g = svg
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Adjust date parsing and formatting
     const parseDate = d3.timeParse("%Y-%m-%d");
     const formatDate = d3.timeFormat("%Y-%m");
     const transformedData = data.map(d => {
@@ -30,8 +33,6 @@ const LineChart = ({ data }) => {
         Date_layoffs: parsedDate ? formatDate(parsedDate) : "Invalid date"
       };
     }).filter(d => d.Date_layoffs !== "Invalid date");
-
-    console.log(transformedData);
 
     const dataByMonth = Array.from(d3.group(transformedData, d => d.Date_layoffs),
       ([month, values]) => ({
@@ -44,29 +45,24 @@ const LineChart = ({ data }) => {
       .domain(d3.extent(dataByMonth, d => d.month))
       .range([0, width]);
 
-    const xAxis = d3.axisBottom(x).tickFormat(d3.timeFormat("%Y-%m"))
-      .tickSizeOuter(0);
-
     const y = d3.scaleLinear()
       .domain([0, d3.max(dataByMonth, d => d.Laid_Off)])
       .range([height, 0])
       .nice();
 
-    const yAxis = d3.axisLeft(y).ticks(10);
-
-    svg.append("g")
+    g.append("g")
       .attr("transform", `translate(0, ${height})`)
-      .call(xAxis)
+      .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%Y-%m")))
       .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", ".15em")
-      .attr("transform", "rotate(-45)");
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-45)");
 
-    svg.append("g")
-      .call(yAxis);
+    g.append("g")
+      .call(d3.axisLeft(y));
 
-    svg.append("path")
+    g.append("path")
       .datum(dataByMonth)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
@@ -75,6 +71,23 @@ const LineChart = ({ data }) => {
         .x(d => x(d.month))
         .y(d => y(d.Laid_Off))
       );
+
+    // Setup the brush
+    const brush = d3.brushX()
+      .extent([[0, 0], [width, height]])
+      .on("end", function (event) {
+        const selection = event.selection;
+        if (selection) {
+          handleRangeChange(selection.map(x.invert));
+          const [x0, x1] = selection.map(x.invert);
+          setSelectedRange([x0, x1]); // Store the date range in state
+          console.log(x0, x1); // Or handle the range however needed
+        }
+      });
+
+    g.append("g")
+      .attr("class", "brush")
+      .call(brush);
 
   }, [data]);
 

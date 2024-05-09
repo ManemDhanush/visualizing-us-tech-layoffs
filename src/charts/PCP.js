@@ -3,7 +3,7 @@ import Parcoords from "parcoord-es";
 import "parcoord-es/dist/parcoords.css";
 import * as d3 from 'd3';
 
-const PCP = ({ props }) => {
+const PCP = ({ data }) => {
     // console.log(props);
     const chartRef = useRef(null);
     const colors = ["#4c78a8","#f58518","#54a24b","#e45756"];
@@ -11,7 +11,7 @@ const PCP = ({ props }) => {
         d3.select(chartRef.current).selectAll("*").remove();
         const loadData = async () => {
             if (chartRef !== null) {
-                const pcp_data = props.parallelData.map((d) => {
+                const pcp_data = data.map((d) => {
                     return {
                         // ...d,
                         // After_layoffs: d["After_layoffs"],
@@ -40,7 +40,7 @@ const PCP = ({ props }) => {
             }
         };
         loadData();
-    }, [props]);
+    }, [data]);
 
     return (
         <div
