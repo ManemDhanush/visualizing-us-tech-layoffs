@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import "./App.css";
 import full_data from "./data/data.json";
 import BarChart from "./charts/BarChart";
 import DoughnutChart from "./charts/DoughnutChart";
-import ParallelCoordinatePlotAllColumns from "./charts/ParallelCoordinatePlotAllColumns";
+// import ParallelCoordinatePlotAllColumns from "./charts/ParallelCoordinatePlotAllColumns";
 import PCP from "./charts/PCP";
 import LineChart from "./charts/LineChart";
 // import DonutChart from "./charts/DonutChart";
@@ -30,7 +30,7 @@ function App() {
       d.Industry &&
       d.Percentage &&
       d.Money_Raised_in_$_mil &&
-      d.Stage != "Unknown"
+      d.Stage !== "Unknown"
       // d.After_layoffs < 5000
   ));
 
@@ -42,7 +42,7 @@ function App() {
       d.Industry &&
       d.Percentage &&
       d.Money_Raised_in_$_mil &&
-      d.Stage != "Unknown"
+      d.Stage !== "Unknown"
       // d.After_layoffs < 5000
   );
 
@@ -54,7 +54,7 @@ function App() {
       d.Industry &&
       d.Percentage &&
       d.Money_Raised_in_$_mil &&
-      d.Stage != "Unknown"
+      d.Stage !== "Unknown"
       // d.After_layoffs < 5000
   ));
 
